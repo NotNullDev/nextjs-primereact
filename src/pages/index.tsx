@@ -1,9 +1,11 @@
+import Center from "../components/Center"
+
 export const HomePage = () => {
 
   return (
-    <div className="bg-red-500">
+    <Center className="bg-red-500">
       hello
-    </div>
+    </Center>
   )
 }
 

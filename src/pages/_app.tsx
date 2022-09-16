@@ -7,6 +7,7 @@ import type { AppProps } from 'next/app'
 import AppHeader from '../components/Header'
 import SideBar from '../components/SideBar';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -27,8 +28,11 @@ function MyApp({ Component, pageProps }: AppProps) {
     ["Login", "/login"]
   ])
 
+  console.log(`Page changed! Current page: ${router.asPath}`)
+
+  const [tempTitle, setTempTitle] = useState('AA');
+
   const currentPageCandidates = [...links.keys()].filter(key => {
-    console.log(router.asPath)
     return router.asPath === links.get(key)
   })
 
@@ -36,7 +40,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <div className='flex flex-col min-h-[100vh] '>
-      <AppHeader pageTitle={currenPage} />
+      <AppHeader pageTitle={tempTitle} />
       <div className='flex flex-1'>
         <SideBar />
         <div className='flex-1 p-4'>

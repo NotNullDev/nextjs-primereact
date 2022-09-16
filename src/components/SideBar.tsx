@@ -1,3 +1,4 @@
+import { link } from "fs";
 import Link from "next/link"
 import { ReactElement } from "react";
 
@@ -13,10 +14,16 @@ export default function SideBar({ className }: { className?: string }) {
         ["Login", "/login"]
     ])
 
+    const skipSidebarLinks = [
+        "Login"
+    ]
+
+    const filteredSidebarLinks = [...links.keys()].filter(key => !skipSidebarLinks.includes(key))
+
     return (
         <div className={`surface-section flex flex-col ${className} border-r border-slate-700`}>
             {
-                [...links.keys()].map(key => {
+                [...filteredSidebarLinks].map(key => {
                     const currentHref = links.get(key) ?? "/";
                     return (
                         SingleSideBarLink(currentHref, key)
@@ -28,12 +35,15 @@ export default function SideBar({ className }: { className?: string }) {
 }
 
 function SingleSideBarLink(currentHref: string, key: string): ReactElement {
-    return <div className="flex items-center w-full p-4 pb-5 text-center hover:brightness-50 cursor-pointer" key={currentHref}>
-        <i className="pi pi-check mr-3" style={{ 'fontSize': '1em' }}></i>
-        <Link href={currentHref}>
-            <div className="">
-                {key.toUpperCase()}
+    return <div className="">
+        <Link href={currentHref} className="flex items-center w-full p-4 pb-5 " key={currentHref}>
+            <div className="flex items-center w-full p-4 pb-5 text-center hover:brightness-50 cursor-pointer">
+                <i className="pi pi-check mr-3" style={{ 'fontSize': '1em' }}></i>
+                <div className="">
+                    {key.toUpperCase()}
+                </div>
             </div>
+
         </Link>
-    </div>;
+    </div >
 }
