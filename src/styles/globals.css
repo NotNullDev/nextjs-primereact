@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#__next {
+  min-width: 100vw;
+  min-height: 100vh;
+  background-color: var(--surface-ground);
+}
+
+.surface-ground {
+  background-color: var(--surface-ground);
+}
+
+.surface-section {
+  background-color: var(--surface-section);
+}
+
+.surface-card {
+  background-color: var(--surface-card);
+}
+
+.surface-card {
+  background-color: var(--surface-overlay);
+}
+
+.surface-border {
+  background-color: var(--surface-border);
+}
+
+.surface-hover {
+  background-color: var(--surface-hover);
+}
+
+/* --text-color	Font text color.
+--text-secondary-color	Muted font text color with a secondary level.
+--primary-color	Primary color of the theme.
+--primary-color-text	Text color when background is primary color.
+--font-family	Font family of the theme.
+--inline-spacing	Spacing between to adjacent items.
+--border-radius	Common border radius of elements.
+--focus-ring	Box shadow of a focused element.
+--mask-bg	Background of an overlay mask. */
