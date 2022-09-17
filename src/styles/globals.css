@@ -8,6 +8,7 @@ body,
   min-width: 100vw;
   min-height: 100vh;
   background-color: var(--surface-ground);
+  font-size: small;
 }
 
 .surface-ground {
