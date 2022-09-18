@@ -3,6 +3,8 @@ import "../styles/globals.css";
 import "primereact/resources/primereact.min.css"; //core css
 import "primeicons/primeicons.css"; //icons
 
+import "primereact/resources/themes/vela-blue/theme.css"
+
 import type { AppProps } from "next/app";
 import AppHeader from "../components/Header";
 import SideBar from "../components/SideBar";
@@ -10,7 +12,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const appName = "AA";
+  const appName = "AAAAA";
 
   // HOOKS START
   const router = useRouter();
@@ -20,6 +22,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const links: Map<string, string> = new Map<string, string>([
     ["Tracker", "/tracker"],
     ["Projects", "/projects"],
+    ["Users", "/users"],
     ["Team", "/team"],
     ["Roles", "/roles"],
     ["Tags", "/tags"],
@@ -48,7 +51,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         className={`h-[${headerHeightPx}rem] z-[5000] fixed top-0 left-0`}
       />
       <div className={`flex flex-1 mt-14`}>
-        <SideBar className={`w-44 fixed h-[100vh]`} />
+        <SideBar className={`w-44 fixed h-[100vh]`} links={links} />
         <div
           className={`flex flex-1 ml-44 min-h-[calc(100vh - 32rem)] overflow-auto m-0 w-[100vw]`}
         >

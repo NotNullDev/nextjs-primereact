@@ -2,18 +2,7 @@ import { link } from "fs";
 import Link from "next/link";
 import { ReactElement } from "react";
 
-export default function SideBar({ className }: { className?: string }) {
-  const links: Map<string, string> = new Map<string, string>([
-    ["Tracker", "/tracker"],
-    ["Projects", "/projects"],
-    ["Team", "/team"],
-    ["Clients", "/clients"],
-    ["Tags", "/tags"],
-    ["Roles", "/roles"],
-    ["Reports", "/reports"],
-    ["Login", "/login"],
-  ]);
-
+export default function SideBar({ className, links }: { className?: string, links: Map<string, string> }) {
   const skipSidebarLinks = ["Login"];
 
   const filteredSidebarLinks = [...links.keys()].filter(

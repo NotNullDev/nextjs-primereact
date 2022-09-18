@@ -1,5 +1,5 @@
 export type UserDto = {
-  userId: number;
+  id: number;
   name: string;
   surname: string;
   email: string;
@@ -17,7 +17,7 @@ export type UserRoleAssign = {
   roleId: number;
 };
 
-export type UserGroupAssign = {
+export type UseGroupAssign = {
   id: number;
   groupId: number;
   userId: number;

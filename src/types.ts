@@ -1,12 +1,10 @@
-import { SpawnSyncOptionsWithBufferEncoding } from "child_process";
-
 export type User = {
-  userId: number;
+  id: number;
   name: string;
   surname: string;
   email: string;
   roles: UserRole[];
-  manager: User;
+  manager: User | null;
 };
 
 export type UserRole = {
@@ -14,7 +12,6 @@ export type UserRole = {
   name: string;
 };
 
-//??
 export type UserGroupAssign = {
   id: number;
   groupId: number;

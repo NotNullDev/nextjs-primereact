@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
-import { FilterMatchMode, FilterOperator } from "primereact/api";
 import { DataTable } from "primereact/datatable";
+
+import React, { useState, useEffect, useRef } from "react";
 import { Column } from "primereact/column";
 import { Toolbar } from "primereact/toolbar";
 import { Button } from "primereact/button";
@@ -12,6 +12,7 @@ import { fetchNextProjects } from "../lib/projectsService";
 import { Project } from "../types";
 import { ConfirmDialog } from "primereact/confirmdialog"; // To use <ConfirmDialog> tag
 import { confirmDialog } from "primereact/confirmdialog"; // To use confirmDialog method
+
 import { Toast } from "primereact/toast";
 import { Dialog } from "primereact/dialog";
 import { AutoComplete } from "primereact/autocomplete";
@@ -36,6 +37,8 @@ export const ProjectsPage: NextPage<AppProps> = () => {
 
   const [appProjects, setAppProjects] = useState<Project[]>([]);
   const [selectedAppProjects, setSelectedAppProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, isError] = useState<boolean>(false);
 
   const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
 

@@ -1,30 +1,50 @@
 import Center from "../components/Center";
+import React, {useEffect, useRef, useState} from "react";
+import {Toast} from "primereact/toast";
+import {Client, Project, User} from "../types";
 import {DataTable} from "primereact/datatable";
+import {Button} from "primereact/button";
+import {clientsDto, usersDto} from "../sampleData";
 import {Toolbar} from "primereact/toolbar";
 import {Column} from "primereact/column";
 import {ConfirmDialog} from "primereact/confirmdialog";
-import {Toast} from "primereact/toast";
 import {Dialog} from "primereact/dialog";
-import {Button} from "primereact/button";
 import {InputText} from "primereact/inputtext";
-import {AutoComplete} from "primereact/autocomplete";
-import React, {useEffect, useRef, useState} from "react";
-import {Client, Project} from "../types";
-import {clientsDto} from "../sampleData";
 import {InputTextarea} from "primereact/inputtextarea";
+import {UserDto} from "../typesDto";
+import PrimeReact from "primereact/api";
+import Link from "next/link";
 
-const toastLifeTimeMs = 2000;
+const toastLifeTimeMs = 3000;
 
-export default function ClientsPage() {
+export default function UsersPage() {
     const toast = useRef<Toast | null>(null);
 
-    const [clients, setClients] = useState<Client[]>([]);
-    const [selectedAppProjects, setSelectedAppProjects] = useState<Project[]>([]);
+    const [users, setUsers] = useState<User[]>([]);
+    const [selectedAppProjects, setSelectedAppProjects] = useState<User[]>([]);
 
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [dialogClient, setDialogClient] = useState<Client | null>(null);
     const [newItemDialog, setDialogOpen] = useState<boolean>(false);
     const [newProjectName, setNewProjectName] = useState<string>("");
+
+    const ManagerFragment = (user: User) => {
+        return (
+            <React.Fragment>
+                {
+                    user.manager ?
+                        // TODO: manager link
+                        <div className="z-[5000]">
+                            <Link href={`/users/${user.manager?.id}`}>
+                                <div>{`${user.manager?.name} ${user.manager?.surname}`}</div>
+                            </Link>
+                        </div>
+                        :
+                        <div>TODO</div>
+                }
+            </React.Fragment>
+        )
+    }
 
     const dataTableRef = useRef<DataTable | null>(null);
 
@@ -57,7 +77,34 @@ export default function ClientsPage() {
     };
 
     useEffect(() => {
-        setClients([...clientsDto]);
+        setUsers([...usersDto].map((user) => {
+            const manager = [...usersDto].filter(u => u.id === user.managerId);
+            const foundManager: UserDto | null = manager.length > 0 ? manager[0] : null;
+
+            let foundManagerNotDto: User | null = null;
+
+            if (foundManager) {
+                foundManagerNotDto = {
+                    id: foundManager.id,
+                    surname: foundManager.surname,
+                    roles: [],
+                    manager: null,
+                    name: foundManager.name,
+                    email: foundManager.email
+                }
+            }
+
+            const result: User = {
+                id: user.id,
+                email: user.email,
+                name: user.name,
+                manager: foundManagerNotDto,
+                roles: [],
+                surname: user.surname,
+            }
+
+            return result;
+        }));
     }, []);
 
     const rightToolbarContent = () => {
@@ -110,6 +157,8 @@ export default function ClientsPage() {
         );
     };
 
+    console.log(usersDto.length)
+
     return (
         <div className="flex flex-col justify-start items-center flex-1 overflow-auto py-5 pb-32 mx-32 mt-8 p-2">
             <Toolbar
@@ -120,7 +169,7 @@ export default function ClientsPage() {
             <div className="w-full flex justify-center items-start">
                 <DataTable
                     className="h-[400px] w-full max-w-screen-2xl"
-                    value={clients}
+                    value={users}
                     ref={dataTableRef}
                     stripedRows
                     //
@@ -140,13 +189,15 @@ export default function ClientsPage() {
                         return <div>header</div>
                     }}
                 >
-
                     <Column
                         selectionMode="multiple"
                         headerStyle={{width: "3em"}}
                     ></Column>
+                    <Column filter sortable field="id" header="ID"></Column>
                     <Column filter sortable field="name" header="NAME"></Column>
-                    <Column filter sortable field="note" header="NOTE"></Column>
+                    <Column filter sortable field="surname" header="SURNAME"></Column>
+                    <Column filter sortable  field="email" header="EMAIL" ></Column>
+                    <Column filter sortable body={ManagerFragment} header="MANAGER"></Column>
                     <Column exportable={false} body={ActionBodyTemplate}></Column>
                 </DataTable>
             </div>

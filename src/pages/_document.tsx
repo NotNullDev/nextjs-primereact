@@ -5,7 +5,7 @@ export default function Document() {
         <Html>
             <Head >
                 {/* TODO */}
-                <link id='theme-link' rel="stylesheet" href="vela-blue.css" />
+                {/*<link id='theme-link' rel="stylesheet" href="vela-blue.css" />*/}
             </Head>
             <body>
                 <Main />
