@@ -1,38 +1,40 @@
-import { SpawnSyncOptionsWithBufferEncoding } from "child_process";
-
-export type User = {
+export type UserDto = {
   userId: number;
   name: string;
   surname: string;
   email: string;
-  roles: UserRole[];
-  manager: User;
+  managerId: number;
 };
 
-export type UserRole = {
-  owner: User;
+export type UserRoleDto = {
+  id: number;
   name: string;
 };
 
-//??
+export type UserRoleAssign = {
+  id: number;
+  ownerId: number;
+  roleId: number;
+};
+
 export type UserGroupAssign = {
   id: number;
   groupId: number;
   userId: number;
 };
 
-export type UserGroup = {
+export type UserGroupDto = {
   id: number;
   name: string;
 };
 
-export type ProjectUserAssign = {
+export type ProjectUserAssignDto = {
   id: number;
   projectId: number;
   userId: number;
 };
 
-export type Client = {
+export type ClientDto = {
   id: number;
   name: string;
   note: string;
@@ -40,32 +42,36 @@ export type Client = {
 
 // generate 1000 example project objects
 
-export type Project = {
+export type ProjectDto = {
   id: number;
   name: string;
-  client: Client;
-  tasks: Task[];
+  clientId: number;
 };
 
-export type Task = {
+export type TaskDto = {
   id: number;
   description: string;
-  project: Project;
+  projectId: number;
 };
 
-export type Tag = {
+export type TagDto = {
   id: number;
   note: string;
 };
 
-export type Tracker = {
+export type TrackerDto = {
   id: number;
   description: string;
-  project: Project;
+  projectId: number;
   date: Date;
   duration: number; // interval
-  task: Task;
-  user: User;
+  taskId: number;
+  userId: number;
   billable: boolean;
-  tags: Tag[];
+};
+
+export type TrackerTagAssign = {
+  id: number;
+  trackerId: number;
+  tagId: number;
 };

@@ -8,11 +8,13 @@ import { InputText } from "primereact/inputtext";
 
 import { NextPage } from "next";
 import { AppProps } from "next/app";
-import { fetchNextProjects, fetchProjects } from "../lib/projectsService";
+import { fetchNextProjects } from "../lib/projectsService";
 import { Project } from "../types";
 import { ConfirmDialog } from "primereact/confirmdialog"; // To use <ConfirmDialog> tag
 import { confirmDialog } from "primereact/confirmdialog"; // To use confirmDialog method
 import { Toast } from "primereact/toast";
+import { Dialog } from "primereact/dialog";
+import { AutoComplete } from "primereact/autocomplete";
 
 // TODO: make sticky
 const DatatableHeader = () => {
@@ -25,12 +27,22 @@ const DatatableHeader = () => {
   );
 };
 
+const mockClients = ["Google", "Microsoft", "Walmart", "Ebay"];
+
 const toastLifeTimeMs = 6000;
 
 export const ProjectsPage: NextPage<AppProps> = () => {
+  const toast = useRef<Toast | null>(null);
+
   const [appProjects, setAppProjects] = useState<Project[]>([]);
   const [selectedAppProjects, setSelectedAppProjects] = useState<Project[]>([]);
-  const toast = useRef<Toast | null>(null);
+
+  const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
+
+  const [newItemDialog, setNewItemDialog] = useState<boolean>(false);
+  const [selectedClient, setSelectedClient] = useState<string>("");
+  const [newProjectName, setNewProjectName] = useState<string>("");
+  const [filteredClients, setFilteredClients] = useState<string[]>(mockClients);
 
   const dataTableRef = useRef<DataTable | null>(null);
 
@@ -47,7 +59,18 @@ export const ProjectsPage: NextPage<AppProps> = () => {
   const rightToolbarContent = () => {
     return (
       <React.Fragment>
-        <Button className="p-button-info  p-button-raised" label="NEW" />
+        <Button
+          label="EXPORT"
+          className="p-button-success"
+          icon="pi pi-upload"
+          onClick={() => {
+            toast.current?.show({
+              content: "NOT IMPLEMENTED YET",
+              life: toastLifeTimeMs,
+              severity: "error",
+            });
+          }}
+        />
       </React.Fragment>
     );
   };
@@ -55,14 +78,26 @@ export const ProjectsPage: NextPage<AppProps> = () => {
   const leftToolbarContent = () => {
     return (
       <React.Fragment>
-        <Button
-          className="p-button-danger p-button-raised"
-          label="DELETE"
-          disabled={selectedAppProjects.length === 0}
-          onClick={() => {
-            confirm();
-          }}
-        />
+        <div className="flex">
+          <div className="mr-3">
+            <Button
+              className="p-button-info  p-b`utton-raised"
+              icon="pi pi-plus"
+              label="NEW"
+              onClick={() => setNewItemDialog(true)}
+            />
+          </div>
+          {/* TODO: add undo??? */}
+          <Button
+            className="p-button-danger p-button-raised"
+            icon="pi pi-trash"
+            label="DELETE"
+            disabled={selectedAppProjects.length === 0}
+            onClick={() => {
+              confirm();
+            }}
+          />
+        </div>
       </React.Fragment>
     );
   };
@@ -73,7 +108,24 @@ export const ProjectsPage: NextPage<AppProps> = () => {
       header: "Confirmation",
       icon: "pi pi-exclamation-triangle",
       accept: () => showAccepted(selectedAppProjects.length), // TODO: waiting state
-      reject: () => showCanceled(selectedAppProjects.length),
+      reject: () => showCanceled(),
+    });
+  };
+
+  const confirmSingleDeletion = (project: Project) => {
+    confirmDialog({
+      message: `Are you sure you want to delete ${project?.name} project?`,
+      header: "Confirmation",
+      icon: "pi pi-exclamation-triangle",
+      accept: () => {
+        toast.current?.show({
+          summary: "Project deleted",
+          detail: `Project ${project?.name} has been deleted.`,
+          life: toastLifeTimeMs,
+          severity: "success",
+        });
+      },
+      reject: () => showCanceled(),
     });
   };
 
@@ -86,13 +138,35 @@ export const ProjectsPage: NextPage<AppProps> = () => {
     });
   };
 
-  const showCanceled = (deletedCount: number) => {
+  const showCanceled = () => {
     toast.current?.show({
       severity: "info",
       summary: "Deletion cancelled",
       detail: `No items were affected.`,
       life: toastLifeTimeMs,
     });
+  };
+
+  const createNewProject = (newProject: Project) => {
+    toast.current?.show({
+      summary: "Successfully added new project.",
+      life: toastLifeTimeMs,
+      severity: "success",
+    });
+  };
+
+  const ActionBodyTemplate = (rowData: Project) => {
+    return (
+      <React.Fragment>
+        <Button
+          className="p-button-danger p-button-rounded"
+          icon="pi pi-trash"
+          onClick={() => {
+            confirmSingleDeletion(rowData);
+          }}
+        />
+      </React.Fragment>
+    );
   };
 
   // TODO: add skeleton
@@ -138,10 +212,75 @@ export const ProjectsPage: NextPage<AppProps> = () => {
             sortable
             dataType="numeric"
           ></Column>
+          <Column exportable={false} body={ActionBodyTemplate}></Column>
         </DataTable>
       </div>
       <ConfirmDialog />
       <Toast ref={toast} position="bottom-right" />
+      {/* TODO: formik */}
+      <Dialog
+        onHide={() => setNewItemDialog(false)}
+        visible={newItemDialog}
+        header={() => {
+          return <h1 className="text-2xl">New project</h1>;
+        }}
+        footer={() => {
+          return (
+            <div className="flex justify-center">
+              <Button
+                label="Create"
+                className="p-button-success"
+                onClick={() => {
+                  setNewItemDialog(false);
+                  // createNewProject({}); // TODO
+                }}
+              />
+              <Button
+                label="Cancel"
+                className="p-button-danger"
+                onClick={() => {
+                  toast.current?.show({
+                    summary: "Cancelled",
+                    life: toastLifeTimeMs,
+                    severity: "error",
+                  });
+                  setNewItemDialog(false);
+                }}
+              />
+            </div>
+          );
+        }}
+      >
+        <div className="">
+          <h1 className="mb-1">Project name</h1>
+          <InputText
+            className=""
+            value={newProjectName}
+            onChange={(e) => {
+              setNewProjectName(e.target.value);
+            }}
+          />
+          <h1 className="mb-1">Client</h1>
+          <AutoComplete
+            dropdown
+            value={selectedClient}
+            suggestions={filteredClients}
+            completeMethod={(e) => {
+              setFilteredClients((old) => {
+                const filtered = mockClients.filter((v) =>
+                  v
+                    .toLocaleLowerCase()
+                    .includes(e.query.trim().toLocaleLowerCase())
+                );
+                console.log(filteredClients);
+                console.log(filtered);
+                return filtered;
+              });
+            }}
+            onChange={(e) => setSelectedClient(e.value)}
+          />
+        </div>
+      </Dialog>
     </div>
   );
 };

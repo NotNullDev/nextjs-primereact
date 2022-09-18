@@ -26,13 +26,25 @@ export default function SideBar({ className }: { className?: string }) {
     >
       {[...filteredSidebarLinks].map((key) => {
         const currentHref = links.get(key) ?? "/";
-        return SingleSideBarLink(currentHref, key);
+        return (
+          <SingleSideBarLink
+            currentHref={currentHref}
+            key={key}
+            displayName={key}
+          />
+        );
       })}
     </div>
   );
 }
 
-function SingleSideBarLink(currentHref: string, key: string): ReactElement {
+function SingleSideBarLink({
+  currentHref,
+  displayName,
+}: {
+  currentHref: string;
+  displayName: string;
+}): ReactElement {
   return (
     <div className="">
       <Link
@@ -42,7 +54,7 @@ function SingleSideBarLink(currentHref: string, key: string): ReactElement {
       >
         <div className="flex items-center w-full p-4 pb-5 text-center hover:brightness-50 cursor-pointer">
           <i className="pi pi-check mr-3" style={{ fontSize: "1em" }}></i>
-          <div className="">{key.toUpperCase()}</div>
+          <div className="">{displayName.toUpperCase()}</div>
         </div>
       </Link>
     </div>
