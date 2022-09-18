@@ -3,7 +3,7 @@ import Center from "../components/Center";
 export default function ClientsPage() {
     return (
         <Center>
-            <div></div>
+            <div>Clients</div>
         </Center>
     )
 }

@@ -3,7 +3,7 @@ import Center from "../components/Center";
 export default function TeamPage() {
     return (
         <Center>
-            <div></div>
+            <div>Teamsy aa</div>
         </Center>
     )
 }
