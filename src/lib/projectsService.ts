@@ -1,4 +1,5 @@
 import { Project } from "../types";
+import {projects} from "../mock/sampleData";
 
 export interface Image {
   albumId: number;
@@ -9,9 +10,11 @@ export interface Image {
 }
 
 export async function fetchProjects(): Promise<Project[]> {
-  const body = await fetch("http://localhost:3000/api/projects");
-
-  return body.json();
+  // const body = await fetch("http://localhost:3000/api/projects");
+  // return body.json();
+  return new Promise((resolve, reject) => {
+    resolve(projects);
+  });
 }
 
 export async function fetchNextProjects(

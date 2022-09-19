@@ -12,10 +12,9 @@ body,
   min-width: 100vw;
   min-height: 100vh;
   background-color: var(--surface-ground);
-  font-size: small;
+  font-size: 0.9rem;
   font-family: "Roboto", serif
 }
-
 
 
 .surface-ground {

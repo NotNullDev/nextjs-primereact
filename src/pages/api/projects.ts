@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { projects } from "../../sampleData";
+import {projects, projectsDto} from "../../mock/sampleData";
 
 export interface Image {
   albumId: number;
@@ -13,5 +13,5 @@ export default async function Projects(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  return res.status(200).json(projects);
+  return res.status(200).json(projectsDto);
 }

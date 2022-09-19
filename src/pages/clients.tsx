@@ -10,7 +10,7 @@ import {InputText} from "primereact/inputtext";
 import {AutoComplete} from "primereact/autocomplete";
 import React, {useEffect, useRef, useState} from "react";
 import {Client, Project} from "../types";
-import {clientsDto} from "../sampleData";
+import {clientsDto} from "../mock/sampleData";
 import {InputTextarea} from "primereact/inputtextarea";
 
 const toastLifeTimeMs = 2000;
@@ -199,10 +199,8 @@ export default function ClientsPage() {
                                 setDialogClient(old => {
                                     let result = old ? {
                                         ...old,
-                                        name: e.target.value,
-                                        createdAt: Date,
-                                        deletedAt: null,
-                                        updatedAt: new Date()
+                                        updatedAt: new Date(),
+                                        name: e.target.value
                                     } : {
                                         id: 0,
                                         note: "",
@@ -226,11 +224,14 @@ export default function ClientsPage() {
                                                setDialogClient(old => {
                                                    let result = old ? {
                                                        ...old,
-                                                       note: e.target.value,
+                                                       note: e.target.value
                                                    } : {
                                                        id: 0,
                                                        note: e.target.value,
-                                                       name: ""
+                                                       name: "",
+                                                       createdAt: new Date(),
+                                                       updatedAt: null,
+                                                       deletedAt: null
                                                    }
                                                    return result;
                                                });

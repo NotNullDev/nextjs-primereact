@@ -4,7 +4,7 @@ import {Toast} from "primereact/toast";
 import {Client, Project, User} from "../types";
 import {DataTable} from "primereact/datatable";
 import {Button} from "primereact/button";
-import {userRoles, userRolesDtoAssign, usersDto} from "../sampleData";
+import {userRoles, userRolesDtoAssign, usersDto} from "../mock/sampleData";
 import {Toolbar} from "primereact/toolbar";
 import {Column} from "primereact/column";
 import {ConfirmDialog} from "primereact/confirmdialog";
@@ -217,7 +217,7 @@ export default function UsersPage() {
                     <Column filter sortable field="name" header="NAME"></Column>
                     <Column filter sortable field="surname" header="SURNAME"></Column>
                     <Column filter sortable field="email" header="EMAIL"></Column>
-                    {/* TODO */}
+                    {/* TODO add external link */}
                     <Column filter sortable field="manager.name" body={ManagerFragment} header="MANAGER"></Column>
                     <Column filter sortable
                             field="createdAt"

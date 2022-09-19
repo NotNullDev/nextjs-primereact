@@ -1,20 +1,19 @@
 import { faker } from "@faker-js/faker";
-import { Project, UserGroupAssign } from "./types";
+import { Project, UserGroupAssign } from "../types";
 import {
   ClientDto,
   ProjectDto,
   ProjectUserAssignDto,
-  TagDto,
   TaskDto,
   UserDto,
   UserGroupDto,
   UserRoleAssign,
   UserRoleDto,
-} from "./typesDto";
+} from "../typesDto";
 
 // generate 1000 sample project objects
 // @ts-ignore
-export const projects: Project[] = [...Array(1000)].map((_, i) => ({
+export const projects: Project[] = [...Array(50)].map((_, i) => ({
   id: faker.datatype.number(),
   name: faker.company.name(),
   client: {
@@ -55,21 +54,11 @@ export const userGroupAssigns: UserGroupAssign[] = [];
 // generate 50 sample ProjectUserAssignDto objects
 export const projectUserAssignsDto: ProjectUserAssignDto[] = [];
 
-// TODO
-// const projectUserAssignsDtoData  = [...Array(50)].map(
-//     (_, i) => ({
-//       id: i,
-//       projectId: faker.datatype.number(),
-//       userId: usersDto[Math.floor(Math.random() * usersDto.length)]?.userId ?? 0,
-//     })
-// );
-
-// projectUserAssignsDto.push(...projectUserAssignsDtoData);
-
 // generate 50 sample TaskDto objects
 export const tasksDto: TaskDto[] = [];
 
 export const userRolesDtoAssign: UserRoleAssign[] = [];
+
 
 export const userRoles: UserRoleDto[] = [
   {
@@ -124,8 +113,6 @@ const clientsDtoData = [...Array(50)].map((_, i) => ({
 }));
 clientsDto.push(...clientsDtoData);
 
-
-
 const projectsDtoData = [...Array(50)].map((_, i) => ({
   id: i,
   name: faker.company.name(),
@@ -136,16 +123,11 @@ const projectsDtoData = [...Array(50)].map((_, i) => ({
 }));
 projectsDto.push(...projectsDtoData);
 
-// TODO
-// const userGroupAssignsData = [...Array(50)].map(
-//     (_, i) => ({
-//       id: i,
-//       groupId: faker.datatype.number(),
-//       userId: usersDto[Math.floor(Math.random() * usersDto.length)]?.userId ?? 0,
-//     })
-// );
-// userGroupAssigns.push(...userGroupAssignsData);
-
+const userGroupsDtoData = [...Array(50)].map((_, i) => ({
+    id: i,
+    name: faker.science.chemicalElement().symbol,
+}));
+userGroupsDto.push(...userGroupsDtoData);
 
 const tasksDtoData = [...Array(50)].map((_, i) => ({
   id: i,
@@ -164,6 +146,32 @@ userRolesDtoAssign.push(...((): UserRoleAssign[] => {
       id: idx,
       ownerId: u.id,
       roleId: userRoles[Math.floor(Math.random() * userRoles.length)].id ?? 0,
+    });
+  });
+  return result;
+})());
+
+
+
+userGroupAssigns.push(...((): UserGroupAssign[] => {
+  let result: UserGroupAssign[] = [];
+  usersDto.forEach((u, idx) => {
+    result.push({
+      id: idx,
+      userId: u.id,
+      groupId: userGroupsDto[Math.floor(Math.random() * userGroupsDto.length)]?.id ?? 0,
+    });
+  });
+  return result;
+})())
+
+projectUserAssignsDto.push(...(():  ProjectUserAssignDto[] => {
+  let result:  ProjectUserAssignDto[] = [];
+  usersDto.forEach((u, idx) => {
+    result.push({
+      id: idx,
+      userId: u.id,
+      projectId: projectsDto[Math.floor(Math.random() * projectsDto.length)].id ?? 0,
     });
   });
   return result;
