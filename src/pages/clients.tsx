@@ -7,11 +7,12 @@ import {Toast} from "primereact/toast";
 import {Dialog} from "primereact/dialog";
 import {Button} from "primereact/button";
 import {InputText} from "primereact/inputtext";
-import {AutoComplete} from "primereact/autocomplete";
 import React, {useEffect, useRef, useState} from "react";
 import {Client, Project} from "../types";
 import {clientsDto} from "../mock/sampleData";
 import {InputTextarea} from "primereact/inputtextarea";
+import ButtonSuccess from "../components/Buttons/ButtonSuccess";
+import ButtonDanger from "../components/Buttons/ButtonDanger";
 
 const toastLifeTimeMs = 2000;
 
@@ -24,7 +25,6 @@ export default function ClientsPage() {
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [dialogClient, setDialogClient] = useState<Client | null>(null);
     const [newItemDialog, setDialogOpen] = useState<boolean>(false);
-    const [newProjectName, setNewProjectName] = useState<string>("");
 
     const dataTableRef = useRef<DataTable | null>(null);
 
@@ -64,9 +64,8 @@ export default function ClientsPage() {
     const rightToolbarContent = () => {
         return (
             <React.Fragment>
-                <Button
+                <ButtonSuccess
                     label="EXPORT"
-                    className="p-button-success"
                     icon="pi pi-upload"
                     onClick={() => {
                         toast.current?.show({
@@ -85,8 +84,7 @@ export default function ClientsPage() {
             <React.Fragment>
                 <div className="flex">
                     <div className="mr-3">
-                        <Button
-                            className="p-button-info  p-button-raised"
+                        <ButtonSuccess
                             icon="pi pi-plus"
                             label="NEW"
                             onClick={() => {
@@ -97,7 +95,7 @@ export default function ClientsPage() {
                         />
                     </div>
                     {/* TODO: add undo??? */}
-                    <Button
+                    <ButtonDanger
                         className="p-button-danger p-button-raised"
                         icon="pi pi-trash"
                         label="DELETE"
@@ -165,8 +163,8 @@ export default function ClientsPage() {
                     }}
                     footer={() => {
                         return (
-                            <div className="flex justify-center">
-                                <Button
+                            <div className="flex justify-end ml-3">
+                                <ButtonSuccess
                                     label={isEditing ? "Update" : "Create"}
                                     className="p-button-success"
                                     onClick={() => {
@@ -174,7 +172,7 @@ export default function ClientsPage() {
                                         // createNewProject({}); // TODO
                                     }}
                                 />
-                                <Button
+                                <ButtonDanger
                                     label="Cancel"
                                     className="p-button-danger"
                                     onClick={() => {
@@ -216,9 +214,7 @@ export default function ClientsPage() {
                         <div className="flex flex-col mt-3 flex-1">
                             <label htmlFor="new-client-note-input" className="mb-1">Note</label>
                             <InputTextarea id="new-client-note-input"
-
                                            className="flex-1"
-
                                            value={dialogClient?.note ?? ""}
                                            onChange={(e) => {
                                                setDialogClient(old => {

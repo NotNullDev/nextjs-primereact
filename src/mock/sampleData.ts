@@ -1,5 +1,5 @@
-import { faker } from "@faker-js/faker";
-import { Project, UserGroupAssign } from "../types";
+import {faker} from "@faker-js/faker";
+import {Project, UserGroupAssign} from "../types";
 import {
   ClientDto,
   ProjectDto,
@@ -86,6 +86,7 @@ const usersDtoData =  [...Array(50)].map((_, i) => ({
   email: faker.internet.email(),
   managerId: null,
   createdAt: faker.date.past(),
+  editedById: null,
   deletedAt: null,
   updatedAt: null,
 }));
@@ -107,6 +108,7 @@ const clientsDtoData = [...Array(50)].map((_, i) => ({
   id: i,
   name: faker.company.name(),
   note: faker.lorem.lines(5),
+  editedById: null,
   createdAt: faker.date.past(),
   deletedAt: null,
   updatedAt: null,
@@ -120,6 +122,7 @@ const projectsDtoData = [...Array(50)].map((_, i) => ({
   createdAt: faker.date.past(),
   deletedAt: null,
   updatedAt: null,
+  editedById: null,
 }));
 projectsDto.push(...projectsDtoData);
 
@@ -136,6 +139,7 @@ const tasksDtoData = [...Array(50)].map((_, i) => ({
   createdAt: faker.date.past(),
   deletedAt: null,
   updatedAt: null,
+  editedById: null,
 }));
 tasksDto.push(...tasksDtoData);
 

@@ -1,24 +1,12 @@
-import { type } from "os"
-import create from "zustand"
+import create from "zustand";
+import {UserDto} from "../typesDto";
 
-setDarkMode: () => {
-
+export type CurrentUserStore = {
+    currentUser: UserDto | null;
+    setCurrentUser: (user: UserDto | null) => void;
 }
 
-export type UserSettings = {
-    darkMode: boolean,
-    switchColorTheme: () => void
-}
-
-export const useUserSettingsStore = create<UserSettings>(set => ({ // todo: add persistance middleware
-    darkMode: true,
-    switchColorTheme: () => {
-        console.log("User tried to switch themes");
-
-        set(state => {
-            return {
-                darkMode: !state.darkMode
-            }
-        })
-    }
+const useCurrentUserStore = create<CurrentUserStore>(set => ({
+    currentUser: null,
+    setCurrentUser: (user: UserDto | null) => set({currentUser: user})
 }))

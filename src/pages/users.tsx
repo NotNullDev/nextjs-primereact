@@ -1,7 +1,6 @@
-import Center from "../components/Center";
 import React, {useEffect, useRef, useState} from "react";
 import {Toast} from "primereact/toast";
-import {Client, Project, User} from "../types";
+import {Client, User} from "../types";
 import {DataTable} from "primereact/datatable";
 import {Button} from "primereact/button";
 import {userRoles, userRolesDtoAssign, usersDto} from "../mock/sampleData";
@@ -13,6 +12,8 @@ import {InputText} from "primereact/inputtext";
 import {UserDto} from "../typesDto";
 import Link from "next/link";
 import {format} from "date-fns"
+import ButtonSuccess from "../components/Buttons/ButtonSuccess";
+import ButtonDanger from "../components/Buttons/ButtonDanger";
 
 const toastLifeTimeMs = 3000;
 
@@ -88,6 +89,7 @@ export default function UsersPage() {
                     manager: null,
                     name: foundManager.name,
                     email: foundManager.email,
+                    editedBy: null,
                     createdAt: foundManager.createdAt,
                     deletedAt: foundManager.deletedAt,
                     updatedAt: foundManager.updatedAt
@@ -99,6 +101,7 @@ export default function UsersPage() {
                 email: user.email,
                 name: user.name,
                 manager: foundManagerNotDto,
+                editedBy: null,
                 roles: [],
                 surname: user.surname,
                 createdAt: user.createdAt,
@@ -114,9 +117,8 @@ export default function UsersPage() {
     const rightToolbarContent = () => {
         return (
             <React.Fragment>
-                <Button
+                <ButtonSuccess
                     label="EXPORT"
-                    className="p-button-success"
                     icon="pi pi-upload"
                     onClick={() => {
                         toast.current?.show({
@@ -135,8 +137,7 @@ export default function UsersPage() {
             <React.Fragment>
                 <div className="flex">
                     <div className="mr-3">
-                        <Button
-                            className="p-button-info  p-button-raised"
+                        <ButtonSuccess
                             icon="pi pi-plus"
                             label="NEW"
                             onClick={() => {
@@ -147,8 +148,7 @@ export default function UsersPage() {
                         />
                     </div>
                     {/* TODO: add undo??? */}
-                    <Button
-                        className="p-button-danger p-button-raised"
+                    <ButtonDanger
                         icon="pi pi-trash"
                         label="DELETE"
                         disabled={selectedAppProjects.length === 0}
@@ -164,11 +164,11 @@ export default function UsersPage() {
     const getManagers = (): User[] => {
         const managers: String[] = [];
 
-         const managerRoleId = userRoles.find(r => r.name === "manager")?.id;
+        const managerRoleId = userRoles.find(r => r.name === "manager")?.id;
 
-         const managerIds = userRolesDtoAssign.filter(a => {
-             return a.roleId === managerRoleId;
-         }).map(r => r.ownerId);
+        const managerIds = userRolesDtoAssign.filter(a => {
+            return a.roleId === managerRoleId;
+        }).map(r => r.ownerId);
 
         return users.filter(user => {
             return managerIds.includes(user.id);
@@ -203,9 +203,10 @@ export default function UsersPage() {
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
                     //
                     header={() => {
-                        return <Button label="Clear filters" onClick={event => {
-                                // dataTableRef.current?.clearState();
-                                // dataTableRef.current?.reset();
+                        return <Button className="p-button p-button-text p-button-raised p-button-info"
+                                       label="Clear filters" onClick={event => {
+                            // dataTableRef.current?.clearState();
+                            // dataTableRef.current?.reset();
                         }}/>
                     }}
                 >
@@ -251,27 +252,27 @@ export default function UsersPage() {
                 }}
                 footer={() => {
                     return (
-                        <div className="flex justify-center">
-                            <Button
+                        <div className="flex justify-end mr-12">
+                            <ButtonSuccess
                                 label={isEditing ? "Update" : "Create"}
-                                className="p-button-success"
                                 onClick={() => {
                                     setDialogOpen(false);
                                     // createNewProject({}); // TODO
                                 }}
                             />
-                            <Button
-                                label="Cancel"
-                                className="p-button-danger"
-                                onClick={() => {
-                                    toast.current?.show({
-                                        summary: "Cancelled",
-                                        life: toastLifeTimeMs,
-                                        severity: "error",
-                                    });
-                                    setDialogOpen(false);
-                                }}
-                            />
+                            <div className="ml-2">
+                                <ButtonDanger
+                                    label="Cancel"
+                                    onClick={() => {
+                                        toast.current?.show({
+                                            summary: "Cancelled",
+                                            life: toastLifeTimeMs,
+                                            severity: "error",
+                                        });
+                                        setDialogOpen(false);
+                                    }}
+                                />
+                            </div>
                         </div>
                     );
                 }}
@@ -289,11 +290,13 @@ export default function UsersPage() {
                                     createdAt: old.createdAt,
                                     updatedAt: new Date(),
                                     deletedAt: null,
+                                    editedBy: null
                                 } : {
                                     id: 0,
                                     name: e.target.value,
                                     createdAt: new Date(),
                                     updatedAt: null,
+                                    editedBy: null,
                                     deletedAt: null,
                                     surname: "",
                                     manager: null,
@@ -316,10 +319,12 @@ export default function UsersPage() {
                                     createdAt: old.createdAt,
                                     updatedAt: new Date(),
                                     deletedAt: null,
+                                    editedBy: null,
                                 } : {
                                     id: 0,
                                     name: e.target.value,
                                     createdAt: new Date(),
+                                    editedBy: null,
                                     updatedAt: null,
                                     deletedAt: null,
                                     surname: "",
@@ -343,8 +348,10 @@ export default function UsersPage() {
                                     createdAt: old.createdAt,
                                     updatedAt: new Date(),
                                     deletedAt: null,
+                                    editedBy: null,
                                 } : {
                                     id: 0,
+                                    editedBy: null,
                                     name: e.target.value,
                                     createdAt: new Date(),
                                     updatedAt: null,

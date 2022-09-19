@@ -4,6 +4,7 @@ export type UserDto = {
   surname: string;
   email: string;
   managerId: number | null;
+  editedById: number | null;
   createdAt: Date;
   deletedAt: Date | null;
   updatedAt: Date | null;
@@ -41,6 +42,7 @@ export type ClientDto = {
   id: number;
   name: string;
   note: string;
+  editedById: number | null;
   createdAt: Date;
   deletedAt: Date | null;
   updatedAt: Date | null;
@@ -52,6 +54,7 @@ export type ProjectDto = {
   id: number;
   name: string;
   clientId: number;
+  editedById: number | null;
   createdAt: Date;
   deletedAt: Date | null;
   updatedAt: Date | null;
@@ -61,6 +64,7 @@ export type TaskDto = {
   id: number;
   description: string;
   projectId: number;
+  editedById: number | null;
   createdAt: Date;
   deletedAt: Date | null;
   updatedAt: Date | null;
@@ -86,6 +90,7 @@ export type TrackerDto = {
   taskId: number;
   userId: number;
   billable: boolean;
+  editedById: number | null;
   createdAt: Date;
   deletedAt: Date | null;
   updatedAt: Date | null;

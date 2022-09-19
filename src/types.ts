@@ -1,13 +1,14 @@
 export type User = {
-  id: number;
-  name: string;
-  surname: string;
-  email: string;
-  roles: UserRole[];
-  manager: User | null;
-  createdAt: Date;
-  deletedAt: Date | null;
-  updatedAt: Date | null;
+    id: number;
+    name: string;
+    surname: string;
+    email: string;
+    roles: UserRole[];
+    manager: User | null;
+    editedBy: User | null;
+    createdAt: Date;
+    deletedAt: Date | null;
+    updatedAt: Date | null;
 };
 
 export type UserRole = {
@@ -33,34 +34,37 @@ export type ProjectUserAssign = {
 };
 
 export type Client = {
-  id: number;
-  name: string;
-  note: string;
-  createdAt: Date;
-  deletedAt: Date | null;
-  updatedAt: Date | null;
+    id: number;
+    name: string;
+    note: string
+    editedBy: User | null;
+    createdAt: Date;
+    deletedAt: Date | null;
+    updatedAt: Date | null;
 };
 
 // generate 1000 example project objects
 
 export type Project = {
-  id: number;
-  name: string;
-  client: Client;
-  tasks: Task[];
-  createdAt: Date;
-  deletedAt: Date | null;
-  updatedAt: Date | null;
-  // history: number[]; // ??
+    id: number;
+    name: string;
+    client: Client;
+    tasks: Task[];
+    createdAt: Date;
+    editedBy: User | null;
+    deletedAt: Date | null;
+    updatedAt: Date | null;
+    // history: number[]; // ??
 };
 
 export type Task = {
-  id: number;
-  description: string;
-  project: Project;
-  createdAt: Date;
-  deletedAt: Date | null;
-  updatedAt: Date | null;
+    id: number;
+    description: string;
+    project: Project;
+    editedBy: User | null;
+    createdAt: Date;
+    deletedAt: Date | null;
+    updatedAt: Date | null;
 };
 
 export type Tag = {
@@ -69,16 +73,17 @@ export type Tag = {
 };
 
 export type Tracker = {
-  id: number;
-  description: string;
-  project: Project;
-  date: Date;
-  duration: number; // interval
-  task: Task;
-  user: User;
-  billable: boolean;
-  tags: Tag[];
-  createdAt: Date;
-  deletedAt: Date | null;
-  updatedAt: Date | null;
+    id: number;
+    description: string;
+    project: Project;
+    date: Date;
+    duration: number; // interval
+    task: Task;
+    user: User;
+    billable: boolean;
+    tags: Tag[];
+    editedBy: User | null;
+    createdAt: Date;
+    deletedAt: Date | null;
+    updatedAt: Date | null;
 };

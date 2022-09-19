@@ -1,30 +1,30 @@
-import { DataTable } from "primereact/datatable";
+import {DataTable} from "primereact/datatable";
 
-import React, { useState, useEffect, useRef } from "react";
-import { Column } from "primereact/column";
-import { Toolbar } from "primereact/toolbar";
-import { Button } from "primereact/button";
-import { InputText } from "primereact/inputtext";
+import React, {useEffect, useRef, useState} from "react";
+import {Column} from "primereact/column";
+import {Toolbar} from "primereact/toolbar";
+import {Button} from "primereact/button";
+import {InputText} from "primereact/inputtext";
 
-import { NextPage } from "next";
-import { AppProps } from "next/app";
-import { fetchNextProjects } from "../lib/projectsService";
-import { Project } from "../types";
-import { ConfirmDialog } from "primereact/confirmdialog"; // To use <ConfirmDialog> tag
-import { confirmDialog } from "primereact/confirmdialog"; // To use confirmDialog method
-
-import { Toast } from "primereact/toast";
-import { Dialog } from "primereact/dialog";
-import { AutoComplete } from "primereact/autocomplete";
+import {NextPage} from "next";
+import {AppProps} from "next/app";
+import {fetchNextProjects} from "../lib/projectsService";
+import {Project} from "../types";
+import {ConfirmDialog, confirmDialog} from "primereact/confirmdialog"; // To use <ConfirmDialog> tag // To use confirmDialog method
+import {Toast} from "primereact/toast";
+import {Dialog} from "primereact/dialog";
+import {AutoComplete} from "primereact/autocomplete";
+import ButtonDanger from "../components/Buttons/ButtonDanger";
+import ButtonSuccess from "../components/Buttons/ButtonSuccess";
 
 // TODO: make sticky
 const DatatableHeader = () => {
   return (
-    <div className="flex justify-between">
-      <div className="bold text-3xl">Manage projects</div>
-      {/* TODO */}
-      <InputText placeholder="Search" />
-    </div>
+      <div className="flex justify-between">
+        <div className="bold text-3xl">Manage projects</div>
+        {/* TODO */}
+        <InputText placeholder="Search"/>
+      </div>
   );
 };
 
@@ -62,17 +62,16 @@ export const ProjectsPage: NextPage<AppProps> = () => {
   const rightToolbarContent = () => {
     return (
       <React.Fragment>
-        <Button
-          label="EXPORT"
-          className="p-button-success"
-          icon="pi pi-upload"
-          onClick={() => {
-            toast.current?.show({
-              content: "NOT IMPLEMENTED YET",
-              life: toastLifeTimeMs,
-              severity: "error",
-            });
-          }}
+        <ButtonSuccess
+            label="EXPORT"
+            icon="pi pi-upload"
+            onClick={() => {
+              toast.current?.show({
+                content: "NOT IMPLEMENTED YET",
+                life: toastLifeTimeMs,
+                severity: "error",
+              });
+            }}
         />
       </React.Fragment>
     );
@@ -83,22 +82,20 @@ export const ProjectsPage: NextPage<AppProps> = () => {
       <React.Fragment>
         <div className="flex">
           <div className="mr-3">
-            <Button
-              className="p-button-info  p-b`utton-raised"
-              icon="pi pi-plus"
-              label="NEW"
-              onClick={() => setNewItemDialog(true)}
+            <ButtonSuccess
+                icon="pi pi-plus"
+                label="NEW"
+                onClick={() => setNewItemDialog(true)}
             />
           </div>
           {/* TODO: add undo??? */}
-          <Button
-            className="p-button-danger p-button-raised"
-            icon="pi pi-trash"
-            label="DELETE"
-            disabled={selectedAppProjects.length === 0}
-            onClick={() => {
-              confirm();
-            }}
+          <ButtonDanger
+              icon="pi pi-trash"
+              label="DELETE"
+              disabled={selectedAppProjects.length === 0}
+              onClick={() => {
+                confirm();
+              }}
           />
         </div>
       </React.Fragment>
