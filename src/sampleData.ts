@@ -95,16 +95,32 @@ const usersDtoData =  [...Array(50)].map((_, i) => ({
   name: faker.name.firstName(),
   surname: faker.name.lastName(),
   email: faker.internet.email(),
-  managerId: usersDto[Math.floor(Math.random() * usersDto.length)]?.id ?? 0,
+  managerId: null,
+  createdAt: faker.date.past(),
+  deletedAt: null,
+  updatedAt: null,
 }));
-console.log(usersDtoData);
 usersDto.push(...usersDtoData);
 
+const withManagers =  usersDto.map(user => {
+  const cp = {
+    ...user
+  }
+  if ( Math.random() > 0.25 ) {
+    cp.managerId = usersDto[Math.floor(Math.random() * usersDto.length)]?.id ?? 0;
+  }
+  return cp;
+})
+
+usersDto.splice(0, usersDto.length, ...withManagers);
 
 const clientsDtoData = [...Array(50)].map((_, i) => ({
   id: i,
   name: faker.company.name(),
   note: faker.lorem.lines(5),
+  createdAt: faker.date.past(),
+  deletedAt: null,
+  updatedAt: null,
 }));
 clientsDto.push(...clientsDtoData);
 
@@ -114,6 +130,9 @@ const projectsDtoData = [...Array(50)].map((_, i) => ({
   id: i,
   name: faker.company.name(),
   clientId: clientsDto[Math.floor(Math.random() * clientsDto.length)]?.id ?? 0,
+  createdAt: faker.date.past(),
+  deletedAt: null,
+  updatedAt: null,
 }));
 projectsDto.push(...projectsDtoData);
 
@@ -132,6 +151,9 @@ const tasksDtoData = [...Array(50)].map((_, i) => ({
   id: i,
   description: faker.lorem.paragraph(),
   projectId: usersDto[Math.floor(Math.random() * usersDto.length)]?.id ?? 0,
+  createdAt: faker.date.past(),
+  deletedAt: null,
+  updatedAt: null,
 }));
 tasksDto.push(...tasksDtoData);
 

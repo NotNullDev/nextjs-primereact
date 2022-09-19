@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "date-fns": "^2.29.3",
     "next": "12.3.0",
     "primeicons": "^5.0.0",
     "primereact": "^8.5.0",

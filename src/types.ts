@@ -5,6 +5,9 @@ export type User = {
   email: string;
   roles: UserRole[];
   manager: User | null;
+  createdAt: Date;
+  deletedAt: Date | null;
+  updatedAt: Date | null;
 };
 
 export type UserRole = {
@@ -33,6 +36,9 @@ export type Client = {
   id: number;
   name: string;
   note: string;
+  createdAt: Date;
+  deletedAt: Date | null;
+  updatedAt: Date | null;
 };
 
 // generate 1000 example project objects
@@ -42,12 +48,19 @@ export type Project = {
   name: string;
   client: Client;
   tasks: Task[];
+  createdAt: Date;
+  deletedAt: Date | null;
+  updatedAt: Date | null;
+  // history: number[]; // ??
 };
 
 export type Task = {
   id: number;
   description: string;
   project: Project;
+  createdAt: Date;
+  deletedAt: Date | null;
+  updatedAt: Date | null;
 };
 
 export type Tag = {
@@ -65,4 +78,7 @@ export type Tracker = {
   user: User;
   billable: boolean;
   tags: Tag[];
+  createdAt: Date;
+  deletedAt: Date | null;
+  updatedAt: Date | null;
 };

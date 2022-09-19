@@ -3,7 +3,10 @@ export type UserDto = {
   name: string;
   surname: string;
   email: string;
-  managerId: number;
+  managerId: number | null;
+  createdAt: Date;
+  deletedAt: Date | null;
+  updatedAt: Date | null;
 };
 
 export type UserRoleDto = {
@@ -38,6 +41,9 @@ export type ClientDto = {
   id: number;
   name: string;
   note: string;
+  createdAt: Date;
+  deletedAt: Date | null;
+  updatedAt: Date | null;
 };
 
 // generate 1000 example project objects
@@ -46,17 +52,29 @@ export type ProjectDto = {
   id: number;
   name: string;
   clientId: number;
+  createdAt: Date;
+  deletedAt: Date | null;
+  updatedAt: Date | null;
 };
 
 export type TaskDto = {
   id: number;
   description: string;
   projectId: number;
+  createdAt: Date;
+  deletedAt: Date | null;
+  updatedAt: Date | null;
 };
 
 export type TagDto = {
   id: number;
   note: string;
+};
+
+export type TrackerTagAssign = {
+  id: number;
+  trackerId: number;
+  tagId: number;
 };
 
 export type TrackerDto = {
@@ -68,10 +86,7 @@ export type TrackerDto = {
   taskId: number;
   userId: number;
   billable: boolean;
-};
-
-export type TrackerTagAssign = {
-  id: number;
-  trackerId: number;
-  tagId: number;
+  createdAt: Date;
+  deletedAt: Date | null;
+  updatedAt: Date | null;
 };

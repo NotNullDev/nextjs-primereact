@@ -4,29 +4,26 @@ import {Toast} from "primereact/toast";
 import {Client, Project, User} from "../types";
 import {DataTable} from "primereact/datatable";
 import {Button} from "primereact/button";
-import {clientsDto, usersDto} from "../sampleData";
+import {userRoles, userRolesDtoAssign, usersDto} from "../sampleData";
 import {Toolbar} from "primereact/toolbar";
 import {Column} from "primereact/column";
 import {ConfirmDialog} from "primereact/confirmdialog";
 import {Dialog} from "primereact/dialog";
 import {InputText} from "primereact/inputtext";
-import {InputTextarea} from "primereact/inputtextarea";
 import {UserDto} from "../typesDto";
-import PrimeReact from "primereact/api";
 import Link from "next/link";
+import {format} from "date-fns"
 
 const toastLifeTimeMs = 3000;
 
 export default function UsersPage() {
     const toast = useRef<Toast | null>(null);
-
     const [users, setUsers] = useState<User[]>([]);
     const [selectedAppProjects, setSelectedAppProjects] = useState<User[]>([]);
 
     const [isEditing, setIsEditing] = useState<boolean>(false);
-    const [dialogClient, setDialogClient] = useState<Client | null>(null);
-    const [newItemDialog, setDialogOpen] = useState<boolean>(false);
-    const [newProjectName, setNewProjectName] = useState<string>("");
+    const [dialogUser, setDialogUser] = useState<User | null>(null);
+    const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
     const ManagerFragment = (user: User) => {
         return (
@@ -48,7 +45,7 @@ export default function UsersPage() {
 
     const dataTableRef = useRef<DataTable | null>(null);
 
-    const ActionBodyTemplate = (rowData: Client) => {
+    const ActionBodyTemplate = (rowData: User) => {
         return (
             <React.Fragment>
                 <div className="flex">
@@ -56,7 +53,7 @@ export default function UsersPage() {
                         className="p-button-success p-button-rounded"
                         icon="pi pi-pencil"
                         onClick={() => {
-                            setDialogClient(rowData)
+                            setDialogUser(rowData)
                             setIsEditing(true);
                             setDialogOpen(true);
                         }}
@@ -90,7 +87,10 @@ export default function UsersPage() {
                     roles: [],
                     manager: null,
                     name: foundManager.name,
-                    email: foundManager.email
+                    email: foundManager.email,
+                    createdAt: foundManager.createdAt,
+                    deletedAt: foundManager.deletedAt,
+                    updatedAt: foundManager.updatedAt
                 }
             }
 
@@ -101,10 +101,14 @@ export default function UsersPage() {
                 manager: foundManagerNotDto,
                 roles: [],
                 surname: user.surname,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt,
+                deletedAt: null
             }
 
             return result;
         }));
+        // setIsLoading(false);
     }, []);
 
     const rightToolbarContent = () => {
@@ -137,7 +141,7 @@ export default function UsersPage() {
                             label="NEW"
                             onClick={() => {
                                 setIsEditing(false);
-                                setDialogClient(null);
+                                setDialogUser(null);
                                 setDialogOpen(true);
                             }}
                         />
@@ -157,7 +161,19 @@ export default function UsersPage() {
         );
     };
 
-    console.log(usersDto.length)
+    const getManagers = (): User[] => {
+        const managers: String[] = [];
+
+         const managerRoleId = userRoles.find(r => r.name === "manager")?.id;
+
+         const managerIds = userRolesDtoAssign.filter(a => {
+             return a.roleId === managerRoleId;
+         }).map(r => r.ownerId);
+
+        return users.filter(user => {
+            return managerIds.includes(user.id);
+        });
+    }
 
     return (
         <div className="flex flex-col justify-start items-center flex-1 overflow-auto py-5 pb-32 mx-32 mt-8 p-2">
@@ -178,6 +194,7 @@ export default function UsersPage() {
                     rows={5}
                     //
                     reorderableColumns
+                    sortMode="single"
                     //
                     selection={selectedAppProjects}
                     dataKey="id"
@@ -186,7 +203,10 @@ export default function UsersPage() {
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
                     //
                     header={() => {
-                        return <div>header</div>
+                        return <Button label="Clear filters" onClick={event => {
+                                // dataTableRef.current?.clearState();
+                                // dataTableRef.current?.reset();
+                        }}/>
                     }}
                 >
                     <Column
@@ -196,8 +216,25 @@ export default function UsersPage() {
                     <Column filter sortable field="id" header="ID"></Column>
                     <Column filter sortable field="name" header="NAME"></Column>
                     <Column filter sortable field="surname" header="SURNAME"></Column>
-                    <Column filter sortable  field="email" header="EMAIL" ></Column>
-                    <Column filter sortable body={ManagerFragment} header="MANAGER"></Column>
+                    <Column filter sortable field="email" header="EMAIL"></Column>
+                    {/* TODO */}
+                    <Column filter sortable field="manager.name" body={ManagerFragment} header="MANAGER"></Column>
+                    <Column filter sortable
+                            field="createdAt"
+                            body={(rowData) => <div>
+                                {format(rowData.createdAt, "dd.MM.yyyy")}
+                            </div>
+                            }
+                            header="CREATED AT"
+                    ></Column>
+                    <Column filter sortable field="updatedAt" header="UPDATED AT"
+                            body={(rowData: Client) =>
+                                rowData.updatedAt ?
+                                    <div>
+                                        {format(rowData.updatedAt, "dd.MM.yyyy")}
+                                    </div> :
+                                    <div>-</div>}>
+                    </Column>
                     <Column exportable={false} body={ActionBodyTemplate}></Column>
                 </DataTable>
             </div>
@@ -206,11 +243,11 @@ export default function UsersPage() {
             {/* TODO: formik, editor as note input */}
             <Dialog
                 onHide={() => setDialogOpen(false)}
-                visible={newItemDialog}
+                visible={dialogOpen}
                 className="w-1/2 h-1/2"
                 contentClassName="flex"
                 header={() => {
-                    return <h1 className="text-2xl">{isEditing ? "Edit client" : "New client"}</h1>;
+                    return <h1 className="text-2xl">{isEditing ? "Edit user" : "New user"}</h1>;
                 }}
                 footer={() => {
                     return (
@@ -240,47 +277,92 @@ export default function UsersPage() {
                 }}
             >
                 <div className="flex flex-1 flex-col">
-                    <h1 className="mb-2">Client name</h1>
+                    <h1 className="mb-2">Name</h1>
                     <InputText
                         className=""
-                        value={dialogClient?.name ?? ""}
+                        value={dialogUser?.name ?? ""}
                         onChange={(e) => {
-                            setDialogClient(old => {
-                                let result = old ? {
+                            setDialogUser(old => {
+                                let result: User = old ? {
                                     ...old,
-                                    name: e.target.value
+                                    name: e.target.value,
+                                    createdAt: old.createdAt,
+                                    updatedAt: new Date(),
+                                    deletedAt: null,
                                 } : {
                                     id: 0,
-                                    note: "",
-                                    name: e.target.value
+                                    name: e.target.value,
+                                    createdAt: new Date(),
+                                    updatedAt: null,
+                                    deletedAt: null,
+                                    surname: "",
+                                    manager: null,
+                                    email: "",
+                                    roles: []
                                 }
                                 return result;
                             });
                         }}
                     />
-                    <div className="flex flex-col mt-3 flex-1">
-                        <label htmlFor="new-client-note-input" className="mb-1">Note</label>
-                        <InputTextarea id="new-client-note-input"
-
-                                       className="flex-1"
-
-                                       value={dialogClient?.note ?? ""}
-                                       onChange={(e) => {
-                                           setDialogClient(old => {
-                                               let result = old ? {
-                                                   ...old,
-                                                   note: e.target.value
-                                               } : {
-                                                   id: 0,
-                                                   note: e.target.value,
-                                                   name: ""
-                                               }
-                                               return result;
-                                           });
-                                       }}
-
-                        />
-                    </div>
+                    <h1 className="mb-2">Surname</h1>
+                    <InputText
+                        className=""
+                        value={dialogUser?.surname ?? ""}
+                        onChange={(e) => {
+                            setDialogUser(old => {
+                                let result: User = old ? {
+                                    ...old,
+                                    surname: e.target.value,
+                                    createdAt: old.createdAt,
+                                    updatedAt: new Date(),
+                                    deletedAt: null,
+                                } : {
+                                    id: 0,
+                                    name: e.target.value,
+                                    createdAt: new Date(),
+                                    updatedAt: null,
+                                    deletedAt: null,
+                                    surname: "",
+                                    manager: null,
+                                    email: "",
+                                    roles: []
+                                }
+                                return result;
+                            });
+                        }}
+                    />
+                    <h1 className="mb-2">Email</h1>
+                    <InputText
+                        className=""
+                        value={dialogUser?.email ?? ""}
+                        onChange={(e) => {
+                            setDialogUser(old => {
+                                let result: User = old ? {
+                                    ...old,
+                                    email: e.target.value,
+                                    createdAt: old.createdAt,
+                                    updatedAt: new Date(),
+                                    deletedAt: null,
+                                } : {
+                                    id: 0,
+                                    name: e.target.value,
+                                    createdAt: new Date(),
+                                    updatedAt: null,
+                                    deletedAt: null,
+                                    surname: "",
+                                    manager: null,
+                                    email: "",
+                                    roles: []
+                                }
+                                return result;
+                            });
+                        }}
+                    />
+                    <h1 className="mb-2">Manager</h1>
+                    <InputText
+                        className=""
+                        value={"TODO SEARCH"}
+                    />
                 </div>
             </Dialog>
         </div>

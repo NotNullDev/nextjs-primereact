@@ -1,3 +1,21 @@
+# Setup
+Preferred editor:
+  intellij based, VSCode
+
+Installing yarn
+```shell
+npm install -g yarn
+```
+
+Download node modules
+```shell
+yarn
+```
+
+```shell
+yarn run dev
+```
+
 # Tools
 
 - [tailwindcss](https://tailwindcss.com/)

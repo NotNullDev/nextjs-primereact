@@ -20,13 +20,13 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   // TODO: pass to the sidebar
   const links: Map<string, string> = new Map<string, string>([
-    ["Tracker", "/tracker"],
     ["Projects", "/projects"],
     ["Users", "/users"],
+    ["Clients", "/clients"],
+    ["Tracker", "/tracker"],
     ["Team", "/team"],
     ["Roles", "/roles"],
     ["Tags", "/tags"],
-    ["Clients", "/clients"],
     ["Reports", "/reports"],
     ["Login", "/login"],
   ]);
