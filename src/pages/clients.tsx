@@ -28,6 +28,10 @@ export default function ClientsPage() {
 
     const dataTableRef = useRef<DataTable | null>(null);
 
+    useEffect(() => {
+        setClients([...clientsDto]);
+    }, []);
+
     const ActionBodyTemplate = (rowData: Client) => {
         return (
             <React.Fragment>
@@ -56,9 +60,6 @@ export default function ClientsPage() {
         );
     };
 
-    useEffect(() => {
-        setClients([...clientsDto]);
-    }, []);
 
     const rightToolbarContent = () => {
         return (
@@ -111,127 +112,134 @@ export default function ClientsPage() {
     };
 
     return (
-        <div className="flex flex-col justify-start items-center flex-1 overflow-auto py-5 pb-32 mx-32 mt-8 p-2">
-            <Toolbar
-                left={leftToolbarContent}
-                right={rightToolbarContent}
-                className="w-full mb-8"
-            />
-            <div className="w-full flex justify-center items-start">
-                <DataTable
-                    className="h-[400px] w-full max-w-screen-2xl"
-                    value={clients}
-                    ref={dataTableRef}
-                    stripedRows
-                    //
-                    paginator
-                    rowsPerPageOptions={[5, 10, 25, 50, 100]}
-                    rows={5}
-                    //
-                    reorderableColumns
-                    //
-                    selection={selectedAppProjects}
-                    dataKey="id"
-                    onSelectionChange={(e) => setSelectedAppProjects(e.value)}
-                    //
-                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-                    //
+        <Center>
+            <div className="flex flex-col justify-start items-center flex-1 overflow-auto py-5 pb-32 mx-32 mt-8 p-2">
+                <Toolbar
+                    left={leftToolbarContent}
+                    right={rightToolbarContent}
+                    className="w-full mb-8"
+                />
+                <div className="w-full flex justify-center items-start">
+                    <DataTable
+                        className="h-[400px] w-full max-w-screen-2xl"
+                        value={clients}
+                        ref={dataTableRef}
+                        stripedRows
+                        //
+                        paginator
+                        rowsPerPageOptions={[5, 10, 25, 50, 100]}
+                        rows={5}
+                        //
+                        reorderableColumns
+                        //
+                        selection={selectedAppProjects}
+                        dataKey="id"
+                        onSelectionChange={(e) => setSelectedAppProjects(e.value)}
+                        //
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+                        //
+                        header={() => {
+                            return <div>header</div>
+                        }}
+                    >
+
+                        <Column
+                            selectionMode="multiple"
+                            headerStyle={{width: "3em"}}
+                        ></Column>
+                        <Column filter sortable field="name" header="NAME"></Column>
+                        <Column filter sortable field="note" header="NOTE"></Column>
+                        <Column exportable={false} body={ActionBodyTemplate}></Column>
+                    </DataTable>
+                </div>
+                <ConfirmDialog/>
+                <Toast ref={toast} position="bottom-right"/>
+                {/* TODO: formik, editor as note input */}
+                <Dialog
+                    onHide={() => setDialogOpen(false)}
+                    visible={newItemDialog}
+                    className="w-1/2 h-1/2"
+                    contentClassName="flex"
                     header={() => {
-                        return <div>header</div>
+                        return <h1 className="text-2xl">{isEditing ? "Edit client" : "New client"}</h1>;
+                    }}
+                    footer={() => {
+                        return (
+                            <div className="flex justify-center">
+                                <Button
+                                    label={isEditing ? "Update" : "Create"}
+                                    className="p-button-success"
+                                    onClick={() => {
+                                        setDialogOpen(false);
+                                        // createNewProject({}); // TODO
+                                    }}
+                                />
+                                <Button
+                                    label="Cancel"
+                                    className="p-button-danger"
+                                    onClick={() => {
+                                        toast.current?.show({
+                                            summary: "Cancelled",
+                                            life: toastLifeTimeMs,
+                                            severity: "error",
+                                        });
+                                        setDialogOpen(false);
+                                    }}
+                                />
+                            </div>
+                        );
                     }}
                 >
+                    <div className="flex flex-1 flex-col">
+                        <h1 className="mb-2">Client name</h1>
+                        <InputText
+                            className=""
+                            value={dialogClient?.name ?? ""}
+                            onChange={(e) => {
+                                setDialogClient(old => {
+                                    let result = old ? {
+                                        ...old,
+                                        name: e.target.value,
+                                        createdAt: Date,
+                                        deletedAt: null,
+                                        updatedAt: new Date()
+                                    } : {
+                                        id: 0,
+                                        note: "",
+                                        name: e.target.value,
+                                        createdAt: new Date(),
+                                        deletedAt: null,
+                                        updatedAt: new Date()
+                                    }
+                                    return result;
+                                });
+                            }}
+                        />
+                        <div className="flex flex-col mt-3 flex-1">
+                            <label htmlFor="new-client-note-input" className="mb-1">Note</label>
+                            <InputTextarea id="new-client-note-input"
 
-                    <Column
-                        selectionMode="multiple"
-                        headerStyle={{width: "3em"}}
-                    ></Column>
-                    <Column filter sortable field="name" header="NAME"></Column>
-                    <Column filter sortable field="note" header="NOTE"></Column>
-                    <Column exportable={false} body={ActionBodyTemplate}></Column>
-                </DataTable>
-            </div>
-            <ConfirmDialog/>
-            <Toast ref={toast} position="bottom-right"/>
-            {/* TODO: formik, editor as note input */}
-            <Dialog
-                onHide={() => setDialogOpen(false)}
-                visible={newItemDialog}
-                className="w-1/2 h-1/2"
-                contentClassName="flex"
-                header={() => {
-                    return <h1 className="text-2xl">{isEditing ? "Edit client" : "New client"}</h1>;
-                }}
-                footer={() => {
-                    return (
-                        <div className="flex justify-center">
-                            <Button
-                                label={isEditing ? "Update" : "Create"}
-                                className="p-button-success"
-                                onClick={() => {
-                                    setDialogOpen(false);
-                                    // createNewProject({}); // TODO
-                                }}
-                            />
-                            <Button
-                                label="Cancel"
-                                className="p-button-danger"
-                                onClick={() => {
-                                    toast.current?.show({
-                                        summary: "Cancelled",
-                                        life: toastLifeTimeMs,
-                                        severity: "error",
-                                    });
-                                    setDialogOpen(false);
-                                }}
+                                           className="flex-1"
+
+                                           value={dialogClient?.note ?? ""}
+                                           onChange={(e) => {
+                                               setDialogClient(old => {
+                                                   let result = old ? {
+                                                       ...old,
+                                                       note: e.target.value,
+                                                   } : {
+                                                       id: 0,
+                                                       note: e.target.value,
+                                                       name: ""
+                                                   }
+                                                   return result;
+                                               });
+                                           }}
                             />
                         </div>
-                    );
-                }}
-            >
-                <div className="flex flex-1 flex-col">
-                    <h1 className="mb-2">Client name</h1>
-                    <InputText
-                        className=""
-                        value={dialogClient?.name ?? ""}
-                        onChange={(e) => {
-                            setDialogClient(old => {
-                                let result = old ? {
-                                    ...old,
-                                    name: e.target.value
-                                } : {
-                                    id: 0,
-                                    note: "",
-                                    name: e.target.value
-                                }
-                                return result;
-                            });
-                        }}
-                    />
-                    <div className="flex flex-col mt-3 flex-1">
-                        <label htmlFor="new-client-note-input" className="mb-1">Note</label>
-                        <InputTextarea id="new-client-note-input"
-
-                                       className="flex-1"
-
-                                       value={dialogClient?.note ?? ""}
-                                       onChange={(e) => {
-                                           setDialogClient(old => {
-                                               let result = old ? {
-                                                   ...old,
-                                                   note: e.target.value
-                                               } : {
-                                                   id: 0,
-                                                   note: e.target.value,
-                                                   name: ""
-                                               }
-                                               return result;
-                                           });
-                                       }}
-
-                        />
                     </div>
-                </div>
-            </Dialog>
-        </div>
+                </Dialog>
+            </div>
+        </Center>
     );
 }

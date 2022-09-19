@@ -1,6 +1,10 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
 
 html,
 body,
@@ -9,15 +13,32 @@ body,
   min-height: 100vh;
   background-color: var(--surface-ground);
   font-size: small;
+  font-family: "Roboto", serif
 }
 
+
+
 .surface-ground {
-  background-color: var(--surface-ground);
+  background-color: var(--surface-0);
+}
+
+.aa {
+  background-color: var(--surface-overlay);
+}
+
+.ct-hover {
+  background-color: var(--surface-hover);
+}
+
+.ct-on-bg {
+  background-color: var(--surface-overlay);
 }
 
 .surface-section {
   background-color: var(--surface-section);
 }
+
+
 
 .surface-card {
   background-color: var(--surface-card);
@@ -32,6 +53,10 @@ body,
 }
 
 .surface-hover {
+  background-color: var(--surface-hover);
+}
+
+.ct-link-hover:hover {
   background-color: var(--surface-hover);
 }
 
